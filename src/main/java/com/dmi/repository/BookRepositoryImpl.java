@@ -10,10 +10,10 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BookRepositoryImpl /*implements StaticResourceRepository*/ {
+public class BookRepositoryImpl /*implements BookRepository*/ {
 
 	@PersistenceContext
-	EntityManager entityManager;
+	private EntityManager entityManager;
 /*
 	private Criteria getCriteria() {
 		return entityManager.unwrap(Session.class).createCriteria(StaticResource.class);
