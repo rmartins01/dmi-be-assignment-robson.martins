@@ -1,10 +1,8 @@
-# dmi-be-assignment-robson.martins
-
-##Server- Side Development
+# dmi-be-assignment-robson.martins - Server- Side Development
 
 ##How to start service: 
 1º in console, go to dmi-be-assignment-robson.martins folder
-2º mvn spring-boot:run 
+2º ```mvn spring-boot:run``` 
 
 
 ##Request Examples
@@ -19,6 +17,7 @@ Cache-Control: no-cache
 { "author" : "William Cheiquisper", "price" : "12.55", "title" : "Hamlet" } 
 ```
 ###Response:
+```
 {
     "id": 203,
     "title": "Hamlet",
@@ -27,6 +26,7 @@ Cache-Control: no-cache
     "author": "William Cheiquisper",
     "image": "http://assignment.gae.golgek.mobi/static/203.jpg"
 }
+```
 
 ### How to update
 ```
