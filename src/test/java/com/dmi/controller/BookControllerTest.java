@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dmi.AbstractControllerTest;
+import com.dmi.domain.Book;
 
 /**
  * <p>
@@ -23,9 +24,9 @@ public class BookControllerTest extends AbstractControllerTest {
     private static final String RESOURCE_URI = "/api"+VERSION+"/items";
 
     @Test
-    public void testGetBooks() throws Exception {
+    public void testAllBooks() throws Exception {
     	
-        final MvcResult result = super.mvc.perform(MockMvcRequestBuilders.get(RESOURCE_URI).accept(MediaType.APPLICATION_JSON)).andReturn();
+        final MvcResult result = mvc.perform(MockMvcRequestBuilders.get(RESOURCE_URI).accept(MediaType.APPLICATION_JSON)).andReturn();
 
         final String content = result.getResponse().getContentAsString();
         final int status = result.getResponse().getStatus();
@@ -36,12 +37,12 @@ public class BookControllerTest extends AbstractControllerTest {
     
     
     @Test
-    public void testGetSpecificBook() throws Exception {
+    public void testSpecificBook() throws Exception {
 
         final Long id = new Long(1);
 
         final MvcResult result = mvc
-                .perform(MockMvcRequestBuilders.get(RESOURCE_URI+"/"+id).accept(MediaType.APPLICATION_JSON))
+                .perform(MockMvcRequestBuilders.get(RESOURCE_URI, id).accept(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         final String content = result.getResponse().getContentAsString();
@@ -52,6 +53,34 @@ public class BookControllerTest extends AbstractControllerTest {
 
     }
 
+    @Test
+    public void testCreateGreeting() throws Exception {
+
+        final Book book = new Book();
+        book.setAuthor("William Cheiquisper");
+        book.setImage("http://assignment.gae.golgek.mobi/static/200.jpg");
+        book.setPrice(12.55);
+        book.setTitle("Hamlet");
+        
+        final String inputJson = super.mapToJson(book);
+
+        final MvcResult result = mvc.perform(MockMvcRequestBuilders.post(RESOURCE_URI)
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(inputJson))
+                .andReturn();
+
+        final String content = result.getResponse().getContentAsString();
+        final int status = result.getResponse().getStatus();
+
+        Assert.assertEquals("failure - expected HTTP status 201", 201, status);
+        Assert.assertTrue("failure - expected HTTP response body to have a value", (content!=null && !content.isEmpty()));
+
+        final Book createdBook = super.mapFromJson(content, Book.class);
+
+        Assert.assertNotNull("failure - expected Book not null", createdBook);
+        Assert.assertNotNull("failure - expected Book.id not null", createdBook.getId());
+        Assert.assertEquals("failure - expected Book.text match", "test", createdBook.getId());
+    }
+    
     /*
     @Test
     public void testGetGreetingNotFound() throws Exception {
@@ -67,31 +96,6 @@ public class BookControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals("failure - expected HTTP status 404", 404, status);
         Assert.assertTrue("failure - expected HTTP response body to be empty", Strings.isNullOrEmpty(content));
-
-    }
-
-    @Test
-    public void testCreateGreeting() throws Exception {
-
-        final Greeting greeting = new Greeting();
-        greeting.setText("test");
-        final String inputJson = super.mapToJson(greeting);
-
-        final MvcResult result = mvc.perform(MockMvcRequestBuilders.post(RESOURCE_URI)
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(inputJson))
-                .andReturn();
-
-        final String content = result.getResponse().getContentAsString();
-        final int status = result.getResponse().getStatus();
-
-        Assert.assertEquals("failure - expected HTTP status 201", 201, status);
-        Assert.assertTrue("failure - expected HTTP response body to have a value", !Strings.isNullOrEmpty(content));
-
-        final Greeting createdGreeting = super.mapFromJson(content, Greeting.class);
-
-        Assert.assertNotNull("failure - expected greeting not null", createdGreeting);
-        Assert.assertNotNull("failure - expected greeting.id not null", createdGreeting.getId());
-        Assert.assertEquals("failure - expected greeting.text match", "test", createdGreeting.getText());
 
     }
 

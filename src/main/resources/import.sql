@@ -1,6 +1,6 @@
 drop table BOOK;
 
-CREATE TABLE BOOK(id int primary key not null, title varchar(255) not null, price DECIMAL(8,2) not null, author varchar2(255) not null, image varchar2(255) not null, link varchar2(255) not null);
+CREATE TABLE BOOK(id int auto_increment primary key not null, title varchar(255) not null, price DECIMAL(8,2) not null, author varchar2(255) not null, image varchar2(255), link varchar2(255));
 
 INSERT INTO BOOK values (7, 'Seven is my lucky number', 7.77, 'Lucy Ascot', 'http://assignment.gae.golgek.mobi/static/7.jpg', '/api/v1/items/7');
 INSERT INTO BOOK values (8, 'A Dance with Dragons', 19.01, 'George R.R. Martin', 'http://assignment.gae.golgek.mobi/static/8.jpg', '/api/v1/items/8');

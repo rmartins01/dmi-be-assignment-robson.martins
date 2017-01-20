@@ -3,6 +3,7 @@ package com.dmi.domain;
 import java.io.Serializable;
 
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
@@ -18,7 +19,7 @@ public class BookBase implements Serializable{
      * The primary key identifier.
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -27,7 +28,6 @@ public class BookBase implements Serializable{
     @NotNull
     private Double price;
     
-    @NotNull
     private String link;
     
     public BookBase(){}

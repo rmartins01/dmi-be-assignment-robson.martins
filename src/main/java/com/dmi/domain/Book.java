@@ -22,7 +22,6 @@ public class Book extends BookBase{
     @NotNull
     private String author;
     
-    @NotNull
     private String image;
 
     public Book(){}
