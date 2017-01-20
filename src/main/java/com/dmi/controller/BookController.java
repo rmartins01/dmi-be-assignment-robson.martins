@@ -3,9 +3,7 @@ package com.dmi.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -58,8 +56,7 @@ public class BookController extends DMIController {
 	@ResponseBody
 	public ResponseEntity<Collection<BookBase>> getAllBooksWithRestrictedColums() {
 		logger.info(".....getAllBooksWithRestrictedColums");
-		List<BookBase> booksBase = transformObjectToBookBase(bookRepository.getAllBooksWithRestrictedColums());
-		return new ResponseEntity<Collection<BookBase>>(booksBase, HttpStatus.OK);
+		return new ResponseEntity<Collection<BookBase>>(bookRepository.getAllBooksWithRestrictedColums(), HttpStatus.OK);
 	}
 
 	/**
@@ -102,15 +99,26 @@ public class BookController extends DMIController {
 		return new ResponseEntity<Book>(book, HttpStatus.OK);
 	}
 
+	/**
+	 * <p>
+	 * Web service endpoint to create a new Book.
+	 * </p>
+	 * 
+	 */
 	@RequestMapping(value = "/v1/items", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Book> createBook(@RequestBody final Book book) {
 		logger.info(".....createBook");
-		Book saved = bookRepository.save(book);
+		final Book saved = bookRepository.save(book);
 		setNullParamsBook(saved);
 		bookRepository.save(saved);
 		return new ResponseEntity<Book>(saved, HttpStatus.CREATED);
 	}
-	
+
+	/**
+	 * <p>
+	 * Web service endpoint to update an existing Book.
+	 * </p>
+	 */
 	@RequestMapping(value = "/v1/items/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Book> updateBook(@PathVariable("id") final Long id, @Valid @RequestBody final Book book) {
 		logger.info(".....updateBook");
@@ -127,20 +135,21 @@ public class BookController extends DMIController {
 		return new ResponseEntity<Book>(book, HttpStatus.OK);
 	}
 
-	private void setNullParamsBook(Book book) {
+	/**
+	 * <p>
+	 * Web service endpoint to delete an existing Book.
+	 * </p>
+	 */
+	@RequestMapping(value = "/v1/items/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Book> deleteBook(@PathVariable("id") final Long id) {
+		logger.info(".....deleteBook");
+		bookRepository.delete(id);
+		return new ResponseEntity<Book>(HttpStatus.NO_CONTENT);
+	}
+    
+	private void setNullParamsBook(final Book book) {
 		book.setLink("/api/v1/items/"+book.getId());
 		book.setImage("http://assignment.gae.golgek.mobi/static/"+book.getId()+".jpg");
 	}
 	
-	private List<BookBase> transformObjectToBookBase(List<Object[]> allBooksWithRestrictedColums) {
-		List<BookBase> retList = new ArrayList<BookBase>();
-		if (allBooksWithRestrictedColums != null && allBooksWithRestrictedColums.size() > 0) {
-			for (int i = 0; i < allBooksWithRestrictedColums.size(); i++) {
-				Object[] objects = allBooksWithRestrictedColums.get(i);
-				retList.add(new BookBase(new Long(objects[0].toString()), objects[1].toString(),
-						new Double(objects[2].toString()), objects[3].toString()));
-			}
-		}
-		return retList;
-	}
 }
